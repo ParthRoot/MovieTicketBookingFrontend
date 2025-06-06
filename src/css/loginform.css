@@ -1,0 +1,107 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #0d0d0d;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-form-container {
+  background: #1a1a1a;
+  padding: 3rem;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 800px; /* ⬅️ Increased width */
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+  margin: 0 auto;
+}
+
+form h2 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  color: #ff1a1a;
+  font-weight: bold;
+}
+
+.form-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-logo img {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+  background: transparent;
+}
+
+.login-form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.login-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.login-form-group input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem; /* ⬅️ Slightly larger text */
+  border: none;
+  border-radius: 10px;
+  background: #262626;
+  color: white;
+}
+
+.login-form-group input:focus {
+  outline: none;
+  border: 2px solid #ff1a1a;
+}
+
+button {
+  width: 100%;
+  padding: 1rem;
+  background: #ff1a1a;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #e60000;
+}
+
+.signin-link {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+}
+
+.signin-link a {
+  color: #ff1a1a;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signin-link a:hover {
+  text-decoration: underline;
+}
