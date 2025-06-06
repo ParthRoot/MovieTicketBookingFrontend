@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/loginform.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ILogin } from "../common/interface";
 
 export const LoginForm: React.FC = () => {
@@ -17,6 +17,8 @@ export const LoginForm: React.FC = () => {
     message: "",
     type: "",
   });
+
+  const navigate = useNavigate(); // ✅ initialize
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { id, value } = e.target;
@@ -44,10 +46,16 @@ export const LoginForm: React.FC = () => {
       setIsLoading(false);
 
       if (res.ok) {
+        localStorage.setItem("authToken", data?.data?.token); // Save token to localStorage
         setPopupMsg({
           message: "🎉 Login successfully!",
           type: "success",
         });
+
+        // ✅ Redirect to home after slight delay for popup effect
+        setTimeout(() => {
+          navigate("/home"); // replace with your home route
+        }, 1000);
       } else {
         setPopupMsg({
           message: data.message || "❌ Something went wrong!",
@@ -100,7 +108,7 @@ export const LoginForm: React.FC = () => {
               type="password"
               id="password"
               placeholder="Enter Password"
-              value={loginFormData?.email}
+              value={loginFormData?.password}
               onChange={handleInputChange}
             />
           </div>
