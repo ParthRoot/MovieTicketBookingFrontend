@@ -4,6 +4,7 @@ import { ISignUpForm } from "../common/interface";
 
 export const SignUpForm: React.FC = () => {
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
+  const [profileFile, setProfileFile] = useState<File | null>(null);
   const [signUpFormData, setSignUpFormData] = useState<ISignUpForm>({
     first_name: "",
     last_name: "",
@@ -36,12 +37,51 @@ export const SignUpForm: React.FC = () => {
     setPopupMsg({ message: "", type: "" });
 
     try {
+      let avatarUrl = "";
+
+      if (profileFile) {
+        const fileName = `${Date.now()}_${profileFile.name}`.replace(/ /g, "_");
+
+        // Get the pre-signed URL from your server
+        const presignRes = await fetch(
+          `http://localhost:8000/user/presigned-url/upload?file_name=${fileName}`
+        );
+
+        if (!presignRes.ok) {
+          throw new Error("Failed to get pre-signed URL");
+        }
+
+        const url = (await presignRes.json()).data.pre_sign_url;
+
+        // Upload to S3
+        const s3Upload = await fetch(url, {
+          method: "PUT",
+          headers: {
+            "Content-Type": profileFile.type,
+          },
+          body: profileFile,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Upload failed with status ${response.status}`);
+            }
+            return response;
+          })
+          .catch((error) => {
+            console.error("Error uploading to S3:", error.message);
+            // Handle the error accordingly here
+          });
+
+        // Construct public S3 URL (change according to your bucket config)
+        avatarUrl = url.split("?")[0]; // this gives clean image URL
+      }
+
       const res = await fetch("http://localhost:8000/user/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(signUpFormData),
+        body: JSON.stringify({ ...signUpFormData, avatar: avatarUrl }),
       });
 
       const data = await res.json();
@@ -69,7 +109,9 @@ export const SignUpForm: React.FC = () => {
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
+      setProfileFile(file);
       setProfilePreview(URL.createObjectURL(file));
     }
   };
